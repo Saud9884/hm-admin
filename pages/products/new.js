@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function NewProduct() {
 const [title, setTitle] = useState('');
-const [describtion, setDescribtion] = useState('');
+const [description, setDescription] = useState('');
 const [serial, setSerial] = useState('');
 const [condition, setCondition] = useState('New');
 const [region, setRegion] = useState('India');
@@ -18,7 +18,7 @@ const router = useRouter();
 
 async function createProduct(e) {
   e.preventDefault();
-  const data = {title,serial,describtion,condition,region,price,quantity};
+  const data = {title,serial,description,condition,region,price,quantity};
   await axios.post('/api/products', data);
   setGoToProducts(true);
 }
@@ -48,7 +48,7 @@ if (goToProducts){
          </select>
 
          <label>Description</label>
-         <textarea value={describtion} onChange={e => setDescribtion(e.target.value)}/>
+         <textarea value={description} onChange={e => setDescription(e.target.value)}/>
 
          <label>Price (USD)</label>
          <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
