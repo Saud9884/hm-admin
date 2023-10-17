@@ -43,26 +43,11 @@ h1{
 .btn-black{
  @apply bg-black text-white rounded-md py-1 px-4;
   }
-
-  table.basic{
-    @apply w-full bg-white rounded-sm shadow-md shadow-black;
-}
-table.basic thead tr td,
-table.basic thead tr th
-{
-    @apply text-lg text-gray-900 uppercase border-b border-gray-200 px-4 py-2;
-}
-table.basic tr td{
-    @apply px-4 py-1;
-}
-table.basic a{
-    @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
-}
 .btn-default, .btn-red{
     @apply px-4 py-1 rounded-md;
 }
 .btn-red{
-    @apply bg-red-200 text-red-600 px-4 py-1 rounded-sm shadow-sm;
+    @apply bg-red-500 text-white px-4 py-1 rounded-md shadow-sm;
 }
 .btn-default{
     @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
