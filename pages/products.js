@@ -17,7 +17,7 @@ const [products, setProducts] = useState([]);
    });
   }, []);
 
-
+ 
 
   return (
     <Layout>

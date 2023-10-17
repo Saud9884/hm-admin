@@ -7,7 +7,12 @@ export default async function handle(req, res) {
   await mongooseConnect();
 
   if (method === 'GET') {
-    res.json(await Product.find());
+    if (req.query?.id){
+      res.json(await Product.findOne({_id:req.query.id}));
+    } else{
+      res.json(await Product.find());
+    }
+    
   }
 
   if (method === 'POST'){
@@ -19,5 +24,11 @@ export default async function handle(req, res) {
 
    res.json(productDoc);
   }
-  
+
+  if (method === 'PUT'){
+    const {title,serial,description,condition,region,price,quantity,_id} = req.body;
+    await Product.updateOne({_id}, {title,serial,description,condition,region,price,quantity});
+    res.json(true);
+  }
+
 }
