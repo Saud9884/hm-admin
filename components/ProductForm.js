@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import { CldImage } from 'next-cloudinary';
 
 export default function ProductForm(
     {
@@ -12,6 +14,7 @@ export default function ProductForm(
     region:existingRegion,
     price:existingPrice,
     quantity:existingQuantity,
+    images:existingImages,
 }
 ) {
 const [title, setTitle] = useState(existingTitle || '');
@@ -21,13 +24,19 @@ const [condition, setCondition] = useState(existingCondition || 'New');
 const [region, setRegion] = useState(existingRegion || 'India');
 const [price, setPrice] = useState(existingPrice || '');
 const [quantity, setQuantity] = useState(existingQuantity || '');
+const [images, setImages] = useState(existingImages || []);
 
 const [goToProducts, setGoToProducts] = useState(false);
 const router = useRouter();
 
+const [loading, setloading] = useState('');
+
+
+
 async function saveProduct(e) {
+
   e.preventDefault();
-  const data = {title,serial,description,condition,region,price,quantity};
+  const data = {title,serial,description,condition,region,price,quantity,images};
   if(_id){
      //Update or edit Product
     await axios.put('/api/products', {...data,_id});
@@ -43,6 +52,9 @@ async function saveProduct(e) {
 if (goToProducts){
   router.push('/products');
 }
+
+
+
   return (
     <>
       <form onSubmit={saveProduct}>
@@ -51,6 +63,58 @@ if (goToProducts){
          <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
          <label>Serial Number</label>
          <input type="text" value={serial} onChange={e => setSerial(e.target.value)}/>
+
+          <label>
+          Photos
+        </label>
+         <div className="mb-2 flex flex-wrap gap-1">
+          <div>
+          {images.map((image, index) => (
+            <div key={index}>
+              <CldImage
+                width="72"
+                height="72"
+                src={image}
+                sizes="100vw"
+                alt={`Image ${index + 1}`}
+              />
+            </div>
+          ))}
+          </div>
+         
+          <label className="w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-gray-100 shadow-sm border border-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+           
+    <div>
+    <CldUploadWidget 
+    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
+    onSuccess={(results) => {
+      let uploadedPublicIds = [];
+
+      // Check if results.info is an array
+      if (Array.isArray(results.info)) {
+        uploadedPublicIds = results.info.map((result) => result.public_id);
+      } else if (results.info && results.info.public_id) {
+        // If it's a single object, extract the public_id
+        uploadedPublicIds = [results.info.public_id];
+      }
+      setImages((prevImageUrls) => [...prevImageUrls, ...uploadedPublicIds]);
+    }}>
+  {({ open }) => {
+    return (
+      <button className="button" value={images} onClick={() => open()}>
+        Upload
+      </button>
+    );
+  }}
+</CldUploadWidget>
+</div>
+  
+          </label>
+        </div>  
+
 
          <label>Condition</label>
          <select onChange={e => setCondition(e.target.value)} defaultValue={condition}>
