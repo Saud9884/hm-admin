@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { CldImage } from 'next-cloudinary';
+import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm(
     {
@@ -53,7 +54,9 @@ if (goToProducts){
   router.push('/products');
 }
 
-
+function updateImagesOrder(images) {
+  console.log("here",images);
+}
 
   return (
     <>
@@ -67,10 +70,10 @@ if (goToProducts){
           <label>
           Photos
         </label>
-         <div className="mb-2 flex flex-wrap gap-1">
-          <div>
+        <div className="mb-2 flex flex-wrap gap-2">
+          <ReactSortable list={images} setList={updateImagesOrder} className="flex flex-wrap gap-2">
           {images.map((image, index) => (
-            <div key={index}>
+            <div key={index} className="rounded-lg">
               <CldImage
                 width="72"
                 height="72"
@@ -80,7 +83,9 @@ if (goToProducts){
               />
             </div>
           ))}
-          </div>
+          
+          </ReactSortable>
+         
          
           <label className="w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-gray-100 shadow-sm border border-primary">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
