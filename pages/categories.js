@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Categories() {
+    const [editedCategory, setEditedCategory] = useState(null);
     const [name, setName] = useState('');
     const [categories, setCategories] = useState([]);
     const [parentCategory, setParentCategory] = useState('');
@@ -25,12 +26,18 @@ export default function Categories() {
         fetchCategories();
     }
 
+    function editCategory(category) {
+            setEditedCategory(category);
+            setName(category.name);
+            setParentCategory(category.parent?._id);
+    }
+
     return(
        <Layout>
         <h1>Categories</h1>
 
         <div className="mt-4">
-        <label>Add New Category</label>
+        <label>{editedCategory ? `Edit Category : ${editedCategory.name}` : "Add New Category"}</label>
         <form onSubmit={saveCategory} className="flex gap-4">
         <input className="mb-0" type="text" placeholder="Enter Name of the Category" value={name} onChange={e => setName(e.target.value)}/>
 
@@ -52,6 +59,7 @@ export default function Categories() {
                 <tr>
                     <td>Category Name</td>
                     <td>Parent Category</td>
+                    <td>Options</td>
                 </tr>
             </thead>
             <tbody>
@@ -59,6 +67,11 @@ export default function Categories() {
                     <tr>
                         <td>{category.name}</td>
                         <td>{category?.parent?.name}</td>
+                        <td>
+                            <button onClick={() => editCategory(category)}
+                            className="btn-default mr-2">Edit</button>
+                            <button className="btn-red">Delete</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>
