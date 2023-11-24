@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { CldImage } from 'next-cloudinary';
 import { ReactSortable } from "react-sortablejs";
@@ -16,9 +16,11 @@ export default function ProductForm(
     price:existingPrice,
     quantity:existingQuantity,
     images:existingImages,
+    category:assignedCategory,
 }
 ) {
 const [title, setTitle] = useState(existingTitle || '');
+const [category, setCategory] = useState(assignedCategory || '');
 const [description, setDescription] = useState(existingDescription || '');
 const [serial, setSerial] = useState(existingSerial || '');
 const [condition, setCondition] = useState(existingCondition || 'New');
@@ -28,16 +30,22 @@ const [quantity, setQuantity] = useState(existingQuantity || '');
 const [images, setImages] = useState(existingImages || []);
 
 const [goToProducts, setGoToProducts] = useState(false);
+const [categories, setCategories] = useState([]);
 const router = useRouter();
 
-const [loading, setloading] = useState('');
+useEffect(() => {
+  axios
+    .get("/api/categories")
+    .then(res => setCategories(res.data))
+    .catch(err => console.error(err));
+}, []);
 
 
 
 async function saveProduct(e) {
 
   e.preventDefault();
-  const data = {title,serial,description,condition,region,price,quantity,images};
+  const data = {title,serial,description,condition,region,price,quantity,images,category};
   if(_id){
      //Update or edit Product
     await axios.put('/api/products', {...data,_id});
@@ -64,6 +72,19 @@ function updateImagesOrder(images) {
       
       <label>Product Name</label> 
          <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
+
+      <label>Category</label>
+
+      <select 
+      value={category}
+      onChange={e => setCategory(e.target.value)}>
+
+        <option value="">Uncategorized</option>
+        {categories.length > 0 && categories.map(c => (
+          <option value={c._id}>{c.name}</option>
+        ))}
+      </select>
+
          <label>Serial Number</label>
          <input type="text" value={serial} onChange={e => setSerial(e.target.value)}/>
 
