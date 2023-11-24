@@ -26,6 +26,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-sortablejs": "^6.1.4",
+    "react-sweetalert2": "^0.6.0",
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {

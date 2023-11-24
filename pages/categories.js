@@ -1,8 +1,9 @@
 import Layout from "@/components/Layout";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { withSwal } from 'react-sweetalert2';
 
-export default function Categories() {
+function Categories({swal}) {
     const [editedCategory, setEditedCategory] = useState(null);
     const [name, setName] = useState('');
     const [categories, setCategories] = useState([]);
@@ -21,7 +22,16 @@ export default function Categories() {
 
     async function saveCategory(e) {
         e.preventDefault();
-        await axios.post('/api/categories', {name,parentCategory});
+        const data = {name, parentCategory};
+
+        if(editCategory){
+            data._id = editedCategory._id;
+            await axios.put('/api/categories', data);
+            setEditedCategory(null);
+        } else{
+            await axios.post('/api/categories', data);
+        }
+
         setName('');
         fetchCategories();
     }
@@ -31,6 +41,30 @@ export default function Categories() {
             setName(category.name);
             setParentCategory(category.parent?._id);
     }
+
+    function deleteCategory(category) {
+        swal.fire({
+            title: 'Are you Sure?',
+            text: `Do you want to delete ${category.name} Category?`,
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Yes, Delete!',
+            confirmButtonColor: '#d55',
+            reverseButtons: true,
+        }).then(async result => {
+            if (result.isConfirmed){
+                const {_id} = category;
+                
+           await axios
+              .delete('/api/categories?_id='+_id);
+              fetchCategories();
+            }
+        }).catch(error => {
+           console.log(error);
+        });
+
+    }
+
 
     return(
        <Layout>
@@ -70,7 +104,9 @@ export default function Categories() {
                         <td>
                             <button onClick={() => editCategory(category)}
                             className="btn-default mr-2">Edit</button>
-                            <button className="btn-red">Delete</button>
+
+                            <button onClick={() => deleteCategory(category)} 
+                            className="btn-red">Delete</button>
                         </td>
                     </tr>
                 ))}
@@ -79,3 +115,7 @@ export default function Categories() {
        </Layout>
     );
 }
+
+export default withSwal(({ swal }, ref) => (
+    <Categories swal={swal} />
+    ));
