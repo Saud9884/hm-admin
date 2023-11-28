@@ -130,7 +130,7 @@ function updateImagesOrder(images) {
     }}>
   {({ open }) => {
     return (
-      <button className="button" value={images} onClick={() => open()}>
+      <button className="button" typeof="button" value={images} onClick={() => open()}>
         Upload
       </button>
     );
