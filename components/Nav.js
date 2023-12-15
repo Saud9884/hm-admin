@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Logo from "./Logo";
 
-export default function Nav({show}) {
+export default function Nav({ show }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-white text-black rounded-l-lg";
 
@@ -11,15 +11,20 @@ export default function Nav({show}) {
   const { pathname } = router;
 
   async function logout() {
-    await router.push('/');
+    await router.push("/");
     await signOut();
   }
   return (
-    <aside className={(show?'left-0':'-left-full')+" top-0 text-white p-6 pr-0 fixed w-full bg-black h-full md:static md:w-auto transition-all"}>
+    <aside
+      className={
+        (show ? "left-0" : "-left-full") +
+        " top-0 text-white p-6 pr-0 fixed w-full bg-black h-full md:static md:w-auto transition-all"
+      }
+    >
       <div className="mb-4 mr-5">
-      <Logo />
+        <Logo />
       </div>
-      
+
       <nav className="flex flex-col gap-2">
         <Link
           href={"/"}

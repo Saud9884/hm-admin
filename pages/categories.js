@@ -50,7 +50,8 @@ function Categories({swal}) {
             setProperties(category.properties.map(({name,values}) => ({
                 name,
                 values:values.join(',')
-              })));
+              }))
+              );
     }
 
     function deleteCategory(category) {
